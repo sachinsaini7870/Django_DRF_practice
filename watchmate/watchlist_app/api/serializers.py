@@ -3,17 +3,23 @@ from watchlist_app.models import Movie
 
 
 class MovieSerializer(serializers.ModelSerializer):
-    '''
+    """
     Docstring for MovieSerializer
     this method we no need to define cutom fields one by one like serializer.serializer.
-    
-    '''
+
+    """
+
+    len_name = serializers.SerializerMethodField()
+
+    # Custom method to get length of name
+    def get_len_name(self, object):
+        return len(object.name)
+
     class Meta:
         model = Movie
         fields = "__all__"
         # fields = ["id", "name", "description"]
         # exclude = ["active", "name"]
-
 
     # 2 Object level validator
     def validate(self, data):
