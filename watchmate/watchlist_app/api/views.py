@@ -13,7 +13,10 @@ class StreamingPlatformAV(APIView):
 
     def get(self, request):
         platform = StreamingPlatform.objects.all()
-        serializer = StreamingPlatformSerializer(platform, many=True)
+        serializer = StreamingPlatformSerializer(
+            platform, many=True, 
+            # context={"request": request}
+        )
         return Response(serializer.data)
 
     def post(self, request):
@@ -23,6 +26,7 @@ class StreamingPlatformAV(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class StreamPlatformDetailAV(APIView):
     def get(self, request, pk):
@@ -51,6 +55,7 @@ class StreamPlatformDetailAV(APIView):
         platform.delete()
         content = {"message": f"'{serializer.data.get('name')}' deleted successfully."}
         return Response(content, status=status.HTTP_204_NO_CONTENT)
+
 
 class WatchListAV(APIView):
 

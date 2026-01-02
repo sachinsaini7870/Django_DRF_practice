@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from watchlist_app.models import Watchlist, StreamingPlatform
 
+
 class WatchListSerializer(serializers.ModelSerializer):
     """
     Docstring for MovieSerializer
@@ -14,8 +15,13 @@ class WatchListSerializer(serializers.ModelSerializer):
 
 
 class StreamingPlatformSerializer(serializers.ModelSerializer):
-    watchlist = WatchListSerializer(many=True, read_only=True)
-    
+    watchlist = WatchListSerializer(many=True, read_only=True)    # Nested Complete Object
+    # watchlist = serializers.StringRelatedField(many=True)     # Show only __str__ in model as nested object
+    # watchlist = serializers.PrimaryKeyRelatedField(many=True, read_only=True)   # Show primary keys as nested object
+    # watchlist = serializers.HyperlinkedRelatedField(
+    #     many=True, read_only=True, view_name="movie-details"
+    # )  # Show HyperLinks as nested object
+
     class Meta:
         model = StreamingPlatform
         fields = "__all__"
