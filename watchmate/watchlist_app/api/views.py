@@ -2,21 +2,46 @@
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
-from watchlist_app.models import Watchlist, StreamingPlatform
+from watchlist_app.models import Watchlist, StreamingPlatform, Review
 from watchlist_app.api.serializers import (
     WatchListSerializer,
     StreamingPlatformSerializer,
+    ReviewSerializer
 )
+from rest_framework import mixins
+from rest_framework import generics
+
+class ReviewDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+class ReviewList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
 
 class StreamingPlatformAV(APIView):
 
     def get(self, request):
         platform = StreamingPlatform.objects.all()
-        serializer = StreamingPlatformSerializer(platform, many=True, context={"request": request})
+        serializer = StreamingPlatformSerializer(
+            platform, many=True, context={"request": request}
+        )
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = StreamingPlatformSerializer(data=request.data, context={"request": request})
+        serializer = StreamingPlatformSerializer(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -38,7 +63,9 @@ class StreamPlatformDetailAV(APIView):
 
     def put(self, request, pk):
         platform = StreamingPlatform.objects.get(pk=pk)
-        serializer = StreamingPlatformSerializer(platform, data=request.data, context={"request": request})
+        serializer = StreamingPlatformSerializer(
+            platform, data=request.data, context={"request": request}
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
