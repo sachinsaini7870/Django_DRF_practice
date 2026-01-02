@@ -8,19 +8,15 @@ from watchlist_app.api.serializers import (
     StreamingPlatformSerializer,
 )
 
-
 class StreamingPlatformAV(APIView):
 
     def get(self, request):
         platform = StreamingPlatform.objects.all()
-        serializer = StreamingPlatformSerializer(
-            platform, many=True, 
-            # context={"request": request}
-        )
+        serializer = StreamingPlatformSerializer(platform, many=True, context={"request": request})
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = StreamingPlatformSerializer(data=request.data)
+        serializer = StreamingPlatformSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -37,12 +33,12 @@ class StreamPlatformDetailAV(APIView):
                 {"Error": "Platform not found"}, status=status.HTTP_404_NOT_FOUND
             )
 
-        serializer = StreamingPlatformSerializer(platform)
+        serializer = StreamingPlatformSerializer(platform, context={"request": request})
         return Response(serializer.data)
 
     def put(self, request, pk):
         platform = StreamingPlatform.objects.get(pk=pk)
-        serializer = StreamingPlatformSerializer(platform, data=request.data)
+        serializer = StreamingPlatformSerializer(platform, data=request.data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -51,7 +47,7 @@ class StreamPlatformDetailAV(APIView):
 
     def delete(self, request, pk):
         platform = StreamingPlatform.objects.get(pk=pk)
-        serializer = StreamingPlatformSerializer(platform)
+        serializer = StreamingPlatformSerializer(platform, context={"request": request})
         platform.delete()
         content = {"message": f"'{serializer.data.get('name')}' deleted successfully."}
         return Response(content, status=status.HTTP_204_NO_CONTENT)
@@ -98,8 +94,8 @@ class WatchDetailsAV(APIView):
     def delete(self, request, pk):
         movie = Watchlist.objects.get(pk=pk)
         serializer = WatchListSerializer(movie)
-        Watchlist.delete()
-        content = {"message": f"'{serializer.data.get('name')}' deleted successfully."}
+        movie.delete()
+        content = {"message": f"'{serializer.data.get('title')}' deleted successfully."}
         return Response(content, status=status.HTTP_204_NO_CONTENT)
 
 

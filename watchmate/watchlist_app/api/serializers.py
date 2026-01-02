@@ -14,13 +14,13 @@ class WatchListSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class StreamingPlatformSerializer(serializers.ModelSerializer):
-    watchlist = WatchListSerializer(many=True, read_only=True)    # Nested Complete Object
+class StreamingPlatformSerializer(serializers.HyperlinkedModelSerializer):
+    watchlist = WatchListSerializer(many=True, read_only=True)  # Nested Complete Object
     # watchlist = serializers.StringRelatedField(many=True)     # Show only __str__ in model as nested object
     # watchlist = serializers.PrimaryKeyRelatedField(many=True, read_only=True)   # Show primary keys as nested object
     # watchlist = serializers.HyperlinkedRelatedField(
-    #     many=True, read_only=True, view_name="movie-details"
-    # )  # Show HyperLinks as nested object
+    #     many=True, read_only=True, view_name="movie-detail"
+    # )  # Show HyperLinks  as nested object
 
     class Meta:
         model = StreamingPlatform

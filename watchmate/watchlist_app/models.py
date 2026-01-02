@@ -6,7 +6,7 @@ class StreamingPlatform(models.Model):
     website = models.URLField(max_length=100)
 
     def __str__(self):
-        return self.name
+        return f"{self.id} - {self.name}"
 
 
 class Watchlist(models.Model):
@@ -19,4 +19,4 @@ class Watchlist(models.Model):
 
 
     def __str__(self):
-        return self.title
+        return f"{self.id} - {self.title}"
