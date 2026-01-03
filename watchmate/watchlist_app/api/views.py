@@ -71,6 +71,21 @@ class SreamingPlatformVS(viewsets.ViewSet):
         serializer = StreamingPlatformSerializer(watchlist)
         return Response(serializer.data)
 
+    def create(self, request):
+        serializer = StreamingPlatformSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def destroy(self, request, pk=None):
+        platform = StreamingPlatform.objects.get(pk=pk)
+        serializer = StreamingPlatformSerializer(platform)
+        name = serializer.data.get('name')
+        platform.delete()
+        content = {"message": f"'{name}' deleted successfully."}
+        return Response(content, status=status.HTTP_204_NO_CONTENT)
 
 class StreamingPlatformAV(APIView):
 
@@ -118,8 +133,9 @@ class StreamingPlatformDetailAV(APIView):
     def delete(self, request, pk):
         platform = StreamingPlatform.objects.get(pk=pk)
         serializer = StreamingPlatformSerializer(platform, context={"request": request})
+        name = serializer.data.get('name')
         platform.delete()
-        content = {"message": f"'{serializer.data.get('name')}' deleted successfully."}
+        content = {"message": f"'{name}' deleted successfully."}
         return Response(content, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -164,8 +180,9 @@ class WatchDetailsAV(APIView):
     def delete(self, request, pk):
         movie = Watchlist.objects.get(pk=pk)
         serializer = WatchListSerializer(movie)
+        title = serializer.data.get('title')
         movie.delete()
-        content = {"message": f"'{serializer.data.get('title')}' deleted successfully."}
+        content = {"message": f"'{title}' deleted successfully."}
         return Response(content, status=status.HTTP_204_NO_CONTENT)
 
 
