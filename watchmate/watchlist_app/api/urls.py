@@ -10,11 +10,11 @@ from watchlist_app.api.views import (
     ReviewList,
     ReviewDetail,
     ReviewCreate,
-    SreamingPlatformVS,
+    StreamingPlatformVS,
 )
 
 router = DefaultRouter()
-router.register("stream", SreamingPlatformVS, basename="streamingplatform")
+router.register("stream", StreamingPlatformVS, basename="streamingplatform")
 
 urlpatterns = [
     path("list/", WatchListAV.as_view(), name="movie-list"),

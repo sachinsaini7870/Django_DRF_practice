@@ -57,35 +57,44 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 #     def post(self, request, *args, **kwargs):
 #         return self.create(request, *args, **kwargs)
 
+# # ModelViewSet for only GET method
+class StreamingPlatformVS(viewsets.ReadOnlyModelViewSet):
+    queryset = StreamingPlatform.objects.all()
+    serializer_class = StreamingPlatformSerializer
 
-class SreamingPlatformVS(viewsets.ViewSet):
+# # ModelViewSet for all methods GET, PUT, PATCH, POST, DELETE
+# class StreamingPlatformVS(viewsets.ModelViewSet):
+#     queryset = StreamingPlatform.objects.all()
+#     serializer_class = StreamingPlatformSerializer
 
-    def list(self, request):
-        queryset = StreamingPlatform.objects.all()
-        serializer = StreamingPlatformSerializer(queryset, many=True)
-        return Response(serializer.data)
+# class SreamingPlatformVS(viewsets.ViewSet):
 
-    def retrieve(self, request, pk=None):
-        queryset = StreamingPlatform.objects.all()
-        watchlist = get_object_or_404(queryset, pk=pk)
-        serializer = StreamingPlatformSerializer(watchlist)
-        return Response(serializer.data)
+#     def list(self, request):
+#         queryset = StreamingPlatform.objects.all()
+#         serializer = StreamingPlatformSerializer(queryset, many=True)
+#         return Response(serializer.data)
 
-    def create(self, request):
-        serializer = StreamingPlatformSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def retrieve(self, request, pk=None):
+#         queryset = StreamingPlatform.objects.all()
+#         watchlist = get_object_or_404(queryset, pk=pk)
+#         serializer = StreamingPlatformSerializer(watchlist)
+#         return Response(serializer.data)
+
+#     def create(self, request):
+#         serializer = StreamingPlatformSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def destroy(self, request, pk=None):
-        platform = StreamingPlatform.objects.get(pk=pk)
-        serializer = StreamingPlatformSerializer(platform)
-        name = serializer.data.get('name')
-        platform.delete()
-        content = {"message": f"'{name}' deleted successfully."}
-        return Response(content, status=status.HTTP_204_NO_CONTENT)
+#     def destroy(self, request, pk=None):
+#         platform = StreamingPlatform.objects.get(pk=pk)
+#         serializer = StreamingPlatformSerializer(platform)
+#         name = serializer.data.get('name')
+#         platform.delete()
+#         content = {"message": f"'{name}' deleted successfully."}
+#         return Response(content, status=status.HTTP_204_NO_CONTENT)
 
 class StreamingPlatformAV(APIView):
 
