@@ -9,7 +9,11 @@ from watchlist_app.api.serializers import (
     ReviewSerializer,
 )
 from rest_framework import generics
+
 # from rest_framework import mixins
+from rest_framework import viewsets
+from django.shortcuts import get_object_or_404
+
 
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
@@ -17,15 +21,15 @@ class ReviewCreate(generics.CreateAPIView):
     def perform_create(self, serializer):
         pk = self.kwargs.get("pk")
         watchlist = Watchlist.objects.get(pk=pk)
-        serializer.save(watchlist=watchlist)     
+        serializer.save(watchlist=watchlist)
+
 
 class ReviewList(generics.ListAPIView):
     serializer_class = ReviewSerializer
-    
+
     def get_queryset(self):
         pk = self.kwargs["pk"]
         return Review.objects.filter(watchlist=pk)
-
 
 
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -54,6 +58,20 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 #         return self.create(request, *args, **kwargs)
 
 
+class SreamingPlatformVS(viewsets.ViewSet):
+
+    def list(self, request):
+        queryset = StreamingPlatform.objects.all()
+        serializer = StreamingPlatformSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = StreamingPlatform.objects.all()
+        watchlist = get_object_or_404(queryset, pk=pk)
+        serializer = StreamingPlatformSerializer(watchlist)
+        return Response(serializer.data)
+
+
 class StreamingPlatformAV(APIView):
 
     def get(self, request):
@@ -74,7 +92,7 @@ class StreamingPlatformAV(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class StreamPlatformDetailAV(APIView):
+class StreamingPlatformDetailAV(APIView):
     def get(self, request, pk):
         try:
             platform = StreamingPlatform.objects.get(pk=pk)
