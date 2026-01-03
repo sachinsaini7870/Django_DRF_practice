@@ -3,18 +3,19 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
+from rest_framework import generics
+# from rest_framework import mixins
+from rest_framework import viewsets
+from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+
+from watchlist_app.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly
 from watchlist_app.models import Watchlist, StreamingPlatform, Review
 from watchlist_app.api.serializers import (
     WatchListSerializer,
     StreamingPlatformSerializer,
     ReviewSerializer,
 )
-from rest_framework import generics
-
-# from rest_framework import mixins
-from rest_framework import viewsets
-from django.shortcuts import get_object_or_404
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 
 class ReviewCreate(generics.CreateAPIView):
@@ -40,7 +41,7 @@ class ReviewCreate(generics.CreateAPIView):
 
 class ReviewList(generics.ListAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]    # specific class or object level permision
+    permission_classes = [AdminOrReadOnly]    # specific class or object level permision
 
     def get_queryset(self):
         pk = self.kwargs["pk"]
@@ -50,7 +51,7 @@ class ReviewList(generics.ListAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]    # specific class or object level permision
+    permission_classes = [ReviewUserOrReadOnly]    # specific class or object level permision
 
 
 # class ReviewDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
