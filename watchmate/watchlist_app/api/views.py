@@ -10,7 +10,7 @@ from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
-from watchlist_app.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly
+from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
 from watchlist_app.models import Watchlist, StreamingPlatform, Review
 from watchlist_app.api.serializers import (
     WatchListSerializer,
@@ -21,6 +21,7 @@ from watchlist_app.api.serializers import (
 
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Review.objects.all()
@@ -52,7 +53,7 @@ class ReviewCreate(generics.CreateAPIView):
 
 class ReviewList(generics.ListAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]  # specific class or object level permision
+    # permission_classes = [IsAuthenticated]  # specific class or object level permision
 
     def get_queryset(self):
         pk = self.kwargs["pk"]
@@ -63,7 +64,7 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [
-        ReviewUserOrReadOnly
+        IsReviewUserOrReadOnly
     ]  # specific class or object level permision
 
 
@@ -97,6 +98,7 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 class StreamingPlatformVS(viewsets.ModelViewSet):
     queryset = StreamingPlatform.objects.all()
     serializer_class = StreamingPlatformSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
 
 # class SreamingPlatformVS(viewsets.ViewSet):
@@ -130,6 +132,7 @@ class StreamingPlatformVS(viewsets.ModelViewSet):
 
 
 class StreamingPlatformAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         platform = StreamingPlatform.objects.all()
@@ -150,6 +153,8 @@ class StreamingPlatformAV(APIView):
 
 
 class StreamingPlatformDetailAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+
     def get(self, request, pk):
         try:
             platform = StreamingPlatform.objects.get(pk=pk)
@@ -182,6 +187,7 @@ class StreamingPlatformDetailAV(APIView):
 
 
 class WatchListAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         movie = Watchlist.objects.all()
@@ -198,6 +204,7 @@ class WatchListAV(APIView):
 
 
 class WatchDetailsAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request, pk):
         try:
