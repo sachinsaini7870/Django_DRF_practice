@@ -12,6 +12,7 @@ from watchlist_app.api.views import (
     ReviewCreate,
     StreamingPlatformVS,
     UserReview,
+    WatchList,
 )
 
 router = DefaultRouter()
@@ -20,6 +21,7 @@ router.register("stream", StreamingPlatformVS, basename="streamingplatform")
 urlpatterns = [
     path("list/", WatchListAV.as_view(), name="movie-list"),
     path("<int:pk>/", WatchDetailsAV.as_view(), name="movie-detail"),
+    path("list2/", WatchList.as_view(), name="watch-list"),     # Only for test purpose
 
     path("", include(router.urls)),
 
