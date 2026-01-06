@@ -25,7 +25,7 @@ from watchlist_app.api.serializers import (
     ReviewSerializer,
 )
 from watchlist_app.api.throttling import ReviewCreateThrottle, ReviewListThrottle
-from watchlist_app.api.pagination import WatchListPagination
+from watchlist_app.api.pagination import WatchListPagination, WatchListLOPagination
 
 
 class UserReview(generics.ListAPIView):
@@ -219,8 +219,7 @@ class StreamingPlatformDetailAV(APIView):
 class WatchListGV(generics.ListAPIView):
     queryset = Watchlist.objects.all()
     serializer_class = WatchListSerializer
-    pagination_class = WatchListPagination
-
+    pagination_class = WatchListLOPagination
 
 
 class WatchListAV(APIView):
