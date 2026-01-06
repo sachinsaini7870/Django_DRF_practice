@@ -135,7 +135,13 @@ REST_FRAMEWORK = {
     #     "rest_framework.throttling.AnonRateThrottle",
     #     "rest_framework.throttling.UserRateThrottle",
     # ], # This setting for gloabal Throttling
-    "DEFAULT_THROTTLE_RATES": {"anon": "5/day", "user": "10/day"},
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "5/day",
+        "user": "10/day",
+        "review_create": "2/day",
+        "review_list": "10/day",
+        "review_detail": "2/day",
+    },
 }
 
 SIMPLE_JWT = {
