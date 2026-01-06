@@ -218,8 +218,8 @@ class StreamingPlatformDetailAV(APIView):
 class WatchList(generics.ListAPIView):
     queryset = Watchlist.objects.all()
     serializer_class = WatchListSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["^title", "platform__name"]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ["avg_rating"]
 
 
 class WatchListAV(APIView):
