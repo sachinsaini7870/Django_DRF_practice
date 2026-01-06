@@ -4,11 +4,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework import generics
-
 # from rest_framework import mixins
 from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.throttling import UserRateThrottle , AnonRateThrottle
 
 from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
 from watchlist_app.models import Watchlist, StreamingPlatform, Review
@@ -53,7 +53,8 @@ class ReviewCreate(generics.CreateAPIView):
 
 class ReviewList(generics.ListAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]  # specific class or object level permision
+    # permission_classes = [IsAuthenticated]  # specific class or object level permision
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]     # Local Throttling
 
     def get_queryset(self):
         pk = self.kwargs["pk"]
@@ -66,6 +67,7 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [
         IsReviewUserOrReadOnly
     ]  # specific class or object level permision
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]     # Local Throttling
 
 
 # class ReviewDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
