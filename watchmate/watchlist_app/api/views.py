@@ -24,8 +24,12 @@ class UserReview(generics.ListAPIView):
     serializer_class = ReviewSerializer
     # throttle_classes = [ReviewListThrottle, AnonRateThrottle]
 
+    # def get_queryset(self):
+    #     username = self.kwargs['username']
+    #     return Review.objects.filter(review_user__username=username)
+
     def get_queryset(self):
-        username = self.kwargs['username']
+        username = self.request.query_params.get('username')
         return Review.objects.filter(review_user__username=username)
 
 class ReviewCreate(generics.CreateAPIView):
