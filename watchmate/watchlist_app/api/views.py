@@ -15,6 +15,7 @@ from rest_framework.throttling import (
     ScopedRateThrottle,
 )
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
 from watchlist_app.models import Watchlist, StreamingPlatform, Review
@@ -212,14 +213,13 @@ class StreamingPlatformDetailAV(APIView):
         content = {"message": f"'{name}' deleted successfully."}
         return Response(content, status=status.HTTP_204_NO_CONTENT)
 
+
 # This class only for test purpose
 class WatchList(generics.ListAPIView):
     queryset = Watchlist.objects.all()
     serializer_class = WatchListSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["title", "platform__name"]
-
-
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["^title", "platform__name"]
 
 
 class WatchListAV(APIView):
