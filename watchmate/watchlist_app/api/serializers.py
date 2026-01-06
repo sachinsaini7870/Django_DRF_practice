@@ -4,6 +4,7 @@ from watchlist_app.models import Watchlist, StreamingPlatform, Review
 
 class ReviewSerializer(serializers.ModelSerializer):
     review_user = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = Review
         exclude = ("watchlist",)
@@ -16,8 +17,9 @@ class WatchListSerializer(serializers.ModelSerializer):
     this method we no need to define cutom fields one by one like serializer.serializer.
 
     """
-    reviews = ReviewSerializer(many=True, read_only=True)
 
+    # reviews = ReviewSerializer(many=True, read_only=True)
+    platform = serializers.CharField(source="platform.name")
 
     class Meta:
         model = Watchlist

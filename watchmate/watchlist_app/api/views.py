@@ -215,7 +215,7 @@ class StreamingPlatformDetailAV(APIView):
 
 
 # This class only for test purpose
-class WatchList(generics.ListAPIView):
+class WatchListGV(generics.ListAPIView):
     queryset = Watchlist.objects.all()
     serializer_class = WatchListSerializer
     filter_backends = [filters.OrderingFilter]
